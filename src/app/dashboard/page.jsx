@@ -15,9 +15,13 @@ const Dashboard = () => {
     const [userPrompt, setUserPrompt] = useState('');
     const [apiResponse, setApiResponse] = useState('');
     const [loading, setLoading] = useState(false);
+    // --------------------------------------
     const [commandHistory, setCommandHistory] = useState([]);
+    const [responseHistory, setResponseHistory] = useState([]);
+    // --------------------------------------
     const [sidebarOpen, setSidebarOpen] = useState(false);
     // ________________________________________________________________
+
 
     // ======================================================================================
 
@@ -26,10 +30,12 @@ const Dashboard = () => {
 
         setLoading(true);
         setApiResponse('');
+
         setCommandHistory([...commandHistory, userPrompt]);
 
         try {
             const apiKey = process.env.NEXT_PUBLIC_GEMINI_API_KEY;
+
             const genAI = new GoogleGenerativeAI(apiKey);
 
             const model = genAI.getGenerativeModel({
@@ -47,9 +53,13 @@ const Dashboard = () => {
             const chatSession = model.startChat({ generationConfig, history: [] });
 
             const result = await chatSession.sendMessage(userPrompt);
+
             const responseText = await result.response.text();
 
             setApiResponse(responseText);
+
+            setResponseHistory([...responseHistory, responseText]);
+
         } catch (error) {
             console.error('Error fetching API:', error);
             setApiResponse('Sorry, there was an error with the API.');
@@ -71,8 +81,13 @@ const Dashboard = () => {
     // ======================================================================================
 
     const handlePromptClick = (command) => {
+
         setUserPrompt(command);
-        handleSearch();
+
+        const cmdno = commandHistory.findIndex(cmd => cmd === command);
+
+        setApiResponse(responseHistory[cmdno]);
+
     };
 
     // ======================================================================================
@@ -114,7 +129,7 @@ const Dashboard = () => {
                 </ul>
             </div>
 
-            
+
 
             <div className="flex-1 p-6 overflow-auto">
                 <div className="bg-gray-800 mt-6 md:mt-0 p-6 rounded-lg shadow-lg text-white">
