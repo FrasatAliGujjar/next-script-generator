@@ -152,7 +152,7 @@ const Dashboard = () => {
 
                     <div className="relative mt-4">
                         <textarea
-                            className="w-full h-64 p-4 border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-purple-600 bg-gray-700 text-white"
+                            className="w-full h-96 md:h-64 p-4 border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-purple-600 bg-gray-700 text-white"
                             value={loading ? 'Generating response, please wait...' : apiResponse}
                             readOnly
                             placeholder="Response ..."
